@@ -35,7 +35,6 @@ public class SpringRentalappRestapiApplication{
 //        Amenities amenities2 = new Amenities(Facility.parking.facilityName, "four and two wheeler");
 //        Set<Amenities> amenitiesSet = new HashSet<>(Arrays.asList(amenities1, amenities2, amenities3));
 //
-//
 //        //Many to Many
 //
 //        Category category1 = new Category("Boys & Girls");

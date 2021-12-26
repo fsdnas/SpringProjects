@@ -19,12 +19,12 @@ public class PropertyController {
 
 
     @PostMapping("/properties")
-    Property addRentalProperty(Property property) {
+    Property addRentalProperty(@RequestBody Property property) {
         return propertyService.addRentalProperty(property);
     }
 
     @PutMapping("/properties")
-    void updateRentalProperty(Property property) {
+    void updateRentalProperty(@RequestBody Property property) {
         propertyService.updateRentalProperty(property);
     }
 

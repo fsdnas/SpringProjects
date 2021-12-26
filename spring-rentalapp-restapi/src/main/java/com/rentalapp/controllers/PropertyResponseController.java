@@ -2,6 +2,8 @@ package com.rentalapp.controllers;
 
 import com.rentalapp.model.Property;
 import com.rentalapp.service.IPropertyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import java.util.Properties;
 @RequestMapping("/property-response-api")
 public class PropertyResponseController {
     private IPropertyService propertyService;
+    private final Logger logger = LoggerFactory.getLogger(PropertyResponseController.class);
 
     @Autowired
     public void setPropertyService(IPropertyService propertyService) {
@@ -26,6 +29,7 @@ public class PropertyResponseController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("desc", "Adding new Property");
         Property nProperty = propertyService.addRentalProperty(rentalProperty);
+        logger.info("Property added successfully" + nProperty);
 
         return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(nProperty);
     }
@@ -43,6 +47,7 @@ public class PropertyResponseController {
 
     @DeleteMapping("/properties/{propertyId}")
     ResponseEntity<String> deleteProperty(@PathVariable("propertyId") int propertyId) {
+//        logger.debug();
         HttpHeaders headers = new HttpHeaders();
         headers.add("desc", "Adding new Property");
         propertyService.deleteRentalProperty(propertyId);
@@ -56,25 +61,27 @@ public class PropertyResponseController {
         headers.add("desc", "Getting All Properties");
         headers.add("info", "Property details");
         List<Property> properties = propertyService.getAll();
-
         ResponseEntity<List<Property>> propertyResponse = new ResponseEntity(properties, headers, HttpStatus.OK);
-
         return propertyResponse;
     }
 
     @GetMapping("/properties/id/{propertyId}")
     ResponseEntity<Property> getPropertyById(@PathVariable("propertyId") int propertyId) {
+        logger.debug("Getting property by id");
         HttpHeaders headers = new HttpHeaders();
         headers.add("desc", "Getting All Properties");
         headers.add("info", "Property details");
         List<Property> properties = propertyService.getAll();
         Property property = propertyService.getById(propertyId);
-
+        logger.info("Property details" + property);
         return ResponseEntity.ok().headers(headers).body(property);
     }
 
-    @GetMapping("/properties/type/{type}")
-    ResponseEntity<List<Property>> getByType(@PathVariable("type") String type) {
+    
+    @GetMapping("/properties/type")
+    ResponseEntity<List<Property>> getByType(@RequestParam("type") String type) {
+        logger.debug("Getting property by type");
+        logger.info("Property type details" + type);
         return ResponseEntity.ok(propertyService.getByType(type));
     }
 
@@ -159,9 +166,9 @@ public class PropertyResponseController {
         return ResponseEntity.ok().headers(headers).body(properties);
     }
 
-    @GetMapping("/properties/building/{name}")
-    ResponseEntity<List<Property>> getByBuildingName(@PathVariable("name") String buildingName) {
-        List<Property> properties = propertyService.getByBuildingName(buildingName);
+    @GetMapping("/properties/buildingName/{buildingName}")
+    ResponseEntity<List<Property>> getByBuildingName(@PathVariable("building") String building) {//changed buildingName to building
+        List<Property> properties = propertyService.getByBuildingName(building);
         HttpHeaders headers = new HttpHeaders();
         headers.add("desc", "Getting All Properties");
         headers.add("info", "Property details");
@@ -169,8 +176,8 @@ public class PropertyResponseController {
         return ResponseEntity.ok().headers(headers).body(properties);
     }
 
-    @GetMapping("/properties/building/{name}/bedroom/{count}")
-    ResponseEntity<List<Property>> getByBuildingBedrooms(@PathVariable("name") String buildingName, @PathVariable("count") String roomCount) {
+    @GetMapping("/properties/buildingName/{buildingName}/bedroom/{count}")
+    ResponseEntity<List<Property>> getByBuildingBedrooms(@PathVariable("buildingName") String buildingName, @PathVariable("count") String roomCount) {
         List<Property> properties = propertyService.getByBuildingBedrooms(buildingName, roomCount);
         HttpHeaders headers = new HttpHeaders();
         headers.add("desc", "Getting All Properties");
@@ -179,8 +186,8 @@ public class PropertyResponseController {
         return ResponseEntity.ok().headers(headers).body(properties);
     }
 
-    @GetMapping("/properties/building/{name}/category/{category}")
-    ResponseEntity<List<Property>> getByBuildingAndCategory(@PathVariable("name") String buildingName, @PathVariable("category") String categoryName) {
+    @GetMapping("/properties/buildingName/{buildingName}/category/{category}")
+    ResponseEntity<List<Property>> getByBuildingAndCategory(@PathVariable("buildingName") String buildingName, @PathVariable("category") String categoryName) {
         List<Property> properties = propertyService.getByBuildingAndCategory(buildingName, categoryName);
         HttpHeaders headers = new HttpHeaders();
         headers.add("desc", "Getting All Properties");
